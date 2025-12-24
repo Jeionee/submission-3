@@ -72,11 +72,14 @@ class AlbumsHandler {
       const { cover } = request.payload;
       const { id } = request.params;
       
-      console.log('Upload Request:', {
-        hasCover: !!cover,
-        headers: cover?.hapi?.headers,
-        filename: cover?.hapi?.filename,
-      });
+      if (!cover) {
+        const response = h.response({
+          status: 'fail',
+          message: 'Cover tidak ditemukan',
+        });
+        response.code(400);
+        return response;
+      }
 
       this._validator.validateImageHeaders(cover.hapi.headers);
 

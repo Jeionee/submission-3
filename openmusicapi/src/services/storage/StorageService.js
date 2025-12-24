@@ -16,8 +16,18 @@ class StorageService {
     const fileStream = fs.createWriteStream(path);
 
     return new Promise((resolve, reject) => {
-      fileStream.on('error', (error) => reject(error));
+      fileStream.on('error', (error) => {
+        console.error('FileStream Error:', error);
+        reject(error);
+      });
+      
+      file.on('error', (error) => {
+        console.error('File Error:', error);
+        reject(error);
+      });
+
       file.pipe(fileStream);
+      
       file.on('end', () => resolve(filename));
     });
   }
