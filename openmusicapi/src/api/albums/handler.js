@@ -93,6 +93,7 @@ class AlbumsHandler {
       });
       response.code(201);
       return response;
+      
     } catch (error) {
       console.error('Upload Error:', error);
       throw error;
