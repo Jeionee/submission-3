@@ -68,21 +68,32 @@ class AlbumsHandler {
   }
 
   async postUploadImageHandler(request, h) {
-    const { cover } = request.payload;
-    const { id } = request.params;
-    
-    this._validator.validateImageHeaders(cover.hapi.headers);
+    try {
+      const { cover } = request.payload;
+      const { id } = request.params;
+      
+      console.log('Upload Request:', {
+        hasCover: !!cover,
+        headers: cover?.hapi?.headers,
+        filename: cover?.hapi?.filename,
+      });
 
-    const filename = await this._storageService.writeFile(cover, cover.hapi);
+      this._validator.validateImageHeaders(cover.hapi.headers);
 
-    await this._service.updateAlbumCover(id, filename);
+      const filename = await this._storageService.writeFile(cover, cover.hapi);
 
-    const response = h.response({
-      status: 'success',
-      message: 'Sampul berhasil diunggah',
-    });
-    response.code(201);
-    return response;
+      await this._service.updateAlbumCover(id, filename);
+
+      const response = h.response({
+        status: 'success',
+        message: 'Sampul berhasil diunggah',
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      console.error('Upload Error:', error);
+      throw error;
+    }
   }
 
   async postAlbumLikeHandler(request, h) {

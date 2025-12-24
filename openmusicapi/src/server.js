@@ -142,6 +142,37 @@ const init = async () => {
     const { response } = request;
 
     if (response instanceof Error) {
+      if (response.isBoom) {
+        const { statusCode } = response.output;
+        
+        if (statusCode === 413) {
+          const newResponse = h.response({
+            status: 'fail',
+            message: 'Payload content length greater than maximum allowed: 512000',
+          });
+          newResponse.code(413);
+          return newResponse;
+        }
+
+        if (statusCode === 415) {
+          const newResponse = h.response({
+            status: 'fail',
+            message: 'Unsupported Media Type',
+          });
+          newResponse.code(415);
+          return newResponse;
+        }
+
+        if (statusCode === 400) {
+          const newResponse = h.response({
+            status: 'fail',
+            message: response.message,
+          });
+          newResponse.code(400);
+          return newResponse;
+        }
+      }
+
       if (response instanceof ClientError) {
         const newResponse = h.response({
           status: 'fail',

@@ -54,6 +54,16 @@ class AlbumsService {
     }
 
     async updateAlbumCover(id, cover) {
+        const checkQuery = {
+            text: 'SELECT id FROM albums WHERE id = $1',
+            values: [id],
+        };
+        const checkResult = await this._pool.query(checkQuery);
+
+        if (!checkResult.rows.length) {
+            throw new NotFoundError('Album tidak ditemukan');
+        }
+
         const query = {
             text: 'UPDATE albums SET cover = $1 WHERE id = $2 RETURNING id',
             values: [cover, id],
