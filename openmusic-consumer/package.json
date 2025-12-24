@@ -4,11 +4,11 @@
   "description": "Consumer app for OpenMusic API",
   "main": "src/Consumer.js",
   "scripts": {
-    "start": "node ./src/Consumer.js" 
+    "start": "node ./src/Consumer.js"
   },
   "dependencies": {
     "amqplib": "^0.10.3",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.6.1",
     "nodemailer": "^6.9.1",
     "pg": "^8.10.0"
   }
